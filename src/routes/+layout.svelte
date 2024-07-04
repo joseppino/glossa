@@ -1,6 +1,6 @@
 <script>
   import "purecss";
-  import "$lib/global.css";
+  import "$lib/styles/global.css";
   import Menu from "$lib/components/Menu.svelte";
 </script>
 

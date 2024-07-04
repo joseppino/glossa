@@ -8,7 +8,7 @@
       <a href="#" id="menuLink1" class="pure-menu-link">Training</a>
       <ul class="pure-menu-children">
         <li class="pure-menu-item">
-          <a href="/training/general" class="pure-menu-link">General</a>
+          <a href="/training/common-phrases" class="pure-menu-link">Common Phrases</a>
         </li>
       </ul>
     </li>

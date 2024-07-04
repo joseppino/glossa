@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.44.2",
 		"purecss": "^3.0.0"
 	}
 }

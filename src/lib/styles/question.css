@@ -1,0 +1,7 @@
+.input-correct {
+  border: 1px solid green !important;
+}
+
+.input-incorrect {
+  border: 1px solid red !important;
+}
