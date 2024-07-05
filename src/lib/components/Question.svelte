@@ -1,18 +1,34 @@
 <script lang="ts">
   import debounce from "$lib/scripts/debounce";
+  import capitaliseFirstLetter from "$lib/scripts/capitaliseFirstLetter";
   import "$lib/styles/question.css";
+  import { onMount } from "svelte";
 
   let questionForm: HTMLFormElement;
   let answerInputBox: HTMLInputElement;
 
-  export let sentence: string;
+  export let phrase: string;
   export let keyword: string;
+  export let translation: string;
+  export let submitted: boolean = false;
 
   let answer: string;
+  let utterance: SpeechSynthesisUtterance;
+
+  onMount(() => {
+    // preemptively instantiate utterance object for better efficiency
+    utterance = new SpeechSynthesisUtterance();
+    // focus on input box
+    answerInputBox.focus();
+  })
+
+  function redactAndFormatPhrase(p: string, k: string) {
+    return capitaliseFirstLetter(p.toLowerCase().replace(keyword.toLowerCase(), "_".repeat(keyword.length)))
+  }
 
   function checkCorrectness() {
     // -1 for incorrect; 0 for unset; 1 for correct
-    if(keyword === answer) {
+    if(keyword.toLowerCase() === answer.toLowerCase()) {
       answerInputBox.classList.remove("input-incorrect");
       answerInputBox.classList.add("input-correct");
       return 1;
@@ -26,20 +42,52 @@
       return -1;
     }
   }
+
+  function resetInputBox() {
+    answerInputBox.value = "";
+    answerInputBox.classList.remove("input-incorrect");
+    answerInputBox.classList.remove("input-correct");
+  }
+
+  function utterSpeech(text: string) {
+    utterance.text = text;
+    utterance.lang = "IT";
+    window.speechSynthesis.speak(utterance);
+  }
 </script>
 
 <div>
   <form class="pure-form" bind:this={questionForm}>
-    <p>{sentence.replace(keyword, "_".repeat(keyword.length))}</p>
+    <p>{redactAndFormatPhrase(phrase, keyword)}</p>
+    <p class="translation">{translation}</p>
     <input class="pure-input" type="text" name="" placeholder="Answer"
     bind:this={answerInputBox}
     bind:value={answer}
-    on:input={debounce(checkCorrectness, 500)}>
+    on:input={debounce(checkCorrectness, 300)}>
     <div class="button-row">
-      <button class="pure-button" type="button">Skip</button>
+      <button class="pure-button" type="button"
+      on:click={() => {
+        submitted = true;
+        resetInputBox();
+      }}>Skip</button>
       <button class="pure-button" type="button"
         on:click={() => {
-          checkCorrectness();
+          if(checkCorrectness()) {
+            // utterance only tested as functional on Chrome as yet
+            if(navigator.userAgent.includes("Chrome")) {
+              utterSpeech(phrase);
+            }
+          }
+          if(window.speechSynthesis.speaking) {
+            utterance.onend = () => {
+              submitted = true;
+              resetInputBox();
+            }
+            
+          } else {
+            submitted = true;
+            resetInputBox();
+          }
         }
       }>Submit</button>
     </div>
@@ -49,5 +97,10 @@
 <style>
   .button-row {
     margin-top: 10px;
+  }
+
+  .translation {
+    font-size: smaller;
+    font-style: italic;
   }
 </style>

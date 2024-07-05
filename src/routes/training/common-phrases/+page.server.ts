@@ -4,9 +4,9 @@ export async function load() {
 
   const { data, error } = await supabase
     .from("questions")
-    .select();
-    // .select("phrase, keyword")
-    // .eq("category_id", 2);
-    console.log(data);
-    
+    .select("phrase, keyword, english_translation")
+    .eq("category_id", 2);
+  return {
+    questions: data  ?? []
+  };
 }

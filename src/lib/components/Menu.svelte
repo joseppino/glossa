@@ -5,7 +5,7 @@
       <a href="/" class="pure-menu-link">Home</a>
     </li>
     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-      <a href="#" id="menuLink1" class="pure-menu-link">Training</a>
+      <a href="/training" id="menuLink1" class="pure-menu-link">Training</a>
       <ul class="pure-menu-children">
         <li class="pure-menu-item">
           <a href="/training/common-phrases" class="pure-menu-link">Common Phrases</a>
