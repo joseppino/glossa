@@ -12,6 +12,9 @@
   export let translation: string;
   export let submitted: boolean = false;
 
+  // -1 for incorrect; 0 for unset; 1 for correct
+  export let correctness: number;
+
   let answer: string;
   let utterance: SpeechSynthesisUtterance;
 
@@ -27,7 +30,6 @@
   }
 
   function checkCorrectness() {
-    // -1 for incorrect; 0 for unset; 1 for correct
     if(keyword.toLowerCase() === answer.toLowerCase()) {
       answerInputBox.classList.remove("input-incorrect");
       answerInputBox.classList.add("input-correct");
@@ -54,6 +56,42 @@
     utterance.lang = "IT";
     window.speechSynthesis.speak(utterance);
   }
+
+  async function awaitUtteranceCompletion(func: Function): Promise<void> {
+    if(window.speechSynthesis.speaking) {
+      utterance.onend 
+    }
+    // } else {
+    //   submitted = true;
+    //   resetInputBox();
+    // }
+  }
+
+  async function handleSubmit() {
+    correctness = checkCorrectness();
+    if(correctness === 1 || correctness === -1) {
+      if(navigator.userAgent.includes("Chrome")) {
+        utterSpeech(phrase);
+        awaitUtteranceCompletion()
+        .then()
+      }
+    }
+    if(correctness === 1) { // if correct
+
+
+      
+
+    } else if (correctness === -1) { // if incorrect
+      // utterance only tested as functional on Chrome as yet
+      
+      awaitUtteranceCompletion();
+      
+    } else { // if skipped / no answer
+      submitted = true;
+      resetInputBox();
+    }
+    
+  }
 </script>
 
 <div>
@@ -71,25 +109,7 @@
         resetInputBox();
       }}>Skip</button>
       <button class="pure-button" type="button"
-        on:click={() => {
-          if(checkCorrectness()) {
-            // utterance only tested as functional on Chrome as yet
-            if(navigator.userAgent.includes("Chrome")) {
-              utterSpeech(phrase);
-            }
-          }
-          if(window.speechSynthesis.speaking) {
-            utterance.onend = () => {
-              submitted = true;
-              resetInputBox();
-            }
-            
-          } else {
-            submitted = true;
-            resetInputBox();
-          }
-        }
-      }>Submit</button>
+        on:click={handleSubmit}>Submit</button>
     </div>
 </form>
 </div>

@@ -6,7 +6,9 @@
   let currentQIndex: number = 0;
   $: questions = data.questions;
   $: currentQuestion = questions[currentQIndex];
-  
+  let correctness: number;
+  let correctCount, skippedCount, incorrectCount: number;
+
   let submitted: boolean = false;
   $: if(submitted) {
     submitted = false;
@@ -14,6 +16,8 @@
       currentQIndex += 1;
     }
   }
+
+  
 </script>
 
 <h2>Question {currentQIndex+1}/{questions.length}</h2>
@@ -22,4 +26,5 @@
   keyword={currentQuestion.keyword}
   translation={currentQuestion.english_translation}
   bind:submitted={submitted}
+  bind:correctness={correctness}
 />
