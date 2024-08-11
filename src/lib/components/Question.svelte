@@ -11,6 +11,7 @@
   export let keyword: string;
   export let translation: string;
   export let submitted: boolean = false;
+  export let correctCount: number;
 
   // -1 for incorrect; 0 for unset; 1 for correct
   export let correctness: number;
@@ -56,41 +57,24 @@
     utterance.lang = "IT";
     window.speechSynthesis.speak(utterance);
   }
-
-  async function awaitUtteranceCompletion(func: Function): Promise<void> {
-    if(window.speechSynthesis.speaking) {
-      utterance.onend 
-    }
-    // } else {
-    //   submitted = true;
-    //   resetInputBox();
-    // }
-  }
-
+  
   async function handleSubmit() {
-    correctness = checkCorrectness();
-    if(correctness === 1 || correctness === -1) {
-      if(navigator.userAgent.includes("Chrome")) {
-        utterSpeech(phrase);
-        awaitUtteranceCompletion()
-        .then()
+    if(answerInputBox.value.length > 0) {
+      correctness = checkCorrectness();
+      if(correctness === 1 || correctness === -1) {
+        if(navigator.userAgent.includes("Chrome")) {
+          utterSpeech(phrase);
+        }
       }
-    }
-    if(correctness === 1) { // if correct
-
-
-      
-
-    } else if (correctness === -1) { // if incorrect
-      // utterance only tested as functional on Chrome as yet
-      
-      awaitUtteranceCompletion();
-      
-    } else { // if skipped / no answer
+      if(correctness === 1) { // if correct
+        correctCount += 1;
+      }
       submitted = true;
       resetInputBox();
+    } else {
+      answerInputBox.classList.remove("input-correct");
+      answerInputBox.classList.add("input-incorrect");
     }
-    
   }
 </script>
 
@@ -103,12 +87,12 @@
     bind:value={answer}
     on:input={debounce(checkCorrectness, 300)}>
     <div class="button-row">
-      <button class="pure-button" type="button"
+      <button id="btn-skip" class="pure-button" type="button"
       on:click={() => {
         submitted = true;
         resetInputBox();
       }}>Skip</button>
-      <button class="pure-button" type="button"
+      <button id="btn-submit" class="pure-button" type="button"
         on:click={handleSubmit}>Submit</button>
     </div>
 </form>
