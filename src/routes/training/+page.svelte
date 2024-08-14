@@ -2,7 +2,7 @@
 
 <ul>
   <li>
-    <a href="/training/common-phrases">Common Phrases</a>
+    <a href="/training/random">Random</a>
   </li>
 </ul>
 

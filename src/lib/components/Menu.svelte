@@ -8,7 +8,7 @@
       <a href="/training" id="menuLink1" class="pure-menu-link">Training</a>
       <ul class="pure-menu-children">
         <li class="pure-menu-item">
-          <a href="/training/common-phrases" class="pure-menu-link">Common Phrases</a>
+          <a href="/training/random" class="pure-menu-link">Random</a>
         </li>
       </ul>
     </li>

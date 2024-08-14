@@ -19,7 +19,8 @@ export const load: PageServerLoad = async ({ params }) => {
 async function fetchRandomSet() {
   const { data, error } = await supabase
     .from("random_questions")
-    .select("*");
+    .select("*")
+    .limit(20);
   if(!error) {
     return data;
   } else {
